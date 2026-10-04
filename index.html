@@ -3,8 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="GoldRate India — gold rates, calculator, city comparison and price trends.">
-<title>GoldRate India — Gold Rate Today</title>
+<meta name="description" content="Gold rate today in India: 24K, 22K and 18K gold prices per gram and 10g, an easy gold calculator, and 30-day gold price trends.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://goldrateindia.in/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="GoldRate India — Gold Rate Today">
+<meta property="og:description" content="Check 24K, 22K and 18K gold rates in India, calculate gold value, and follow 30-day price trends.">
+<meta property="og:url" content="https://goldrateindia.in/">
+<meta property="og:site_name" content="GoldRate India">
+<meta name="twitter:card" content="summary">
+<title>Gold Rate Today in India | 24K, 22K & 18K | GoldRate India</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f6f4ee;color:#171717;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
 :root{--gold:#c99418;--gold2:#f1cc69;--dark:#151515;--muted:#777;--line:#e6e0d2;--green:#17834a}
@@ -18,6 +26,16 @@ table{width:100%;border-collapse:collapse}.tablewrap{padding:10px 20px}.tablewra
 .note{margin-top:20px;background:#efe9d9;border-radius:13px;padding:14px;font-size:11px;color:#5e5435;line-height:1.5}footer{border-top:1px solid var(--line);padding:25px;color:#777;font-size:11px}.foot{max-width:1200px;margin:auto}
 @media(max-width:800px){.hero,.twocol{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.links{display:none}.hero h1{font-size:38px}.container{padding:22px 15px 50px}.heroMain{padding:28px}}
 </style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"GoldRate India",
+  "url":"https://goldrateindia.in/",
+  "description":"Gold rates in India, gold calculator and gold price trends.",
+  "inLanguage":"en-IN"
+}
+</script>
 </head>
 <body>
 <header><div class="nav"><div class="logo">GoldRate<b>India</b></div><div class="links"><a href="#rates">Rates</a><a href="#trend">Trend</a><a href="#calculator">Calculator</a><a href="#cities">Cities</a></div></div></header>
@@ -44,7 +62,7 @@ table{width:100%;border-collapse:collapse}.tablewrap{padding:10px 20px}.tablewra
 </div></section>
 
 <section class="section twocol" id="trend">
-<div class="panel chart"><div class="heading"><div><h2>30-day trend</h2><div class="muted">24K reference price · ₹/10g</div></div></div><canvas id="chart" width="720" height="270"></canvas></div>
+<div class="panel chart"><div class="heading"><div><h2>30-day trend</h2><div class="muted">Gold spot trend · ₹/10g</div></div></div><canvas id="chart" width="720" height="270"></canvas></div>
 <div class="panel calculator" id="calculator"><h2 style="margin:0">Gold calculator</h2><div class="muted">Metal value before GST and making charges.</div><div class="calcgrid"><select id="rate"><option value="14359">24K</option><option value="13675">22K</option><option value="10769">18K</option></select><input id="grams" type="number" value="10" min="0" step=".01"></div><div class="result"><small>Estimated gold value</small><strong id="total">₹1,36,750</strong><small>Indicative only. Jewellery bills vary by seller.</small></div></div>
 </section>
 
@@ -56,21 +74,45 @@ table{width:100%;border-collapse:collapse}.tablewrap{padding:10px 20px}.tablewra
 <tr><td>Pune</td><td class="city24">—</td><td class="city22">—</td><td>IBJA reference</td></tr>
 </tbody></table></div></section>
 
-<div class="note"><b>Data note:</b> Live 24K reference uses Metals.Dev data for IBJA. 22K and 18K are calculated from the 24K reference by purity. GST, making charges and jeweller-specific premiums are excluded. City-level retail rates can vary by seller and are not yet included. Never put the Metals.Dev API key in this browser code.</div>
+<div class="note"><b>Data note:</b> Live 24K reference uses Metals.Dev data for IBJA. The 30-day chart uses Metals.Dev daily spot-gold history. 22K and 18K are calculated from the 24K reference by purity. GST, making charges and jeweller-specific premiums are excluded. City-level retail rates can vary by seller and are not yet included. Never put the Metals.Dev API key in this browser code.</div>
 </main>
 <footer><div class="foot">© 2026 GoldRate India · Indicative information only.</div></footer>
 
 <script>
 const c=document.getElementById('chart'),x=c.getContext('2d');
-const points=[148790,149200,150100,149800,151300,150900,152100,151700,153000,154200,153600,152900,151800,150900,151600,150800,149900,150500,149700,150200,149800,150600,149900,150100,149600,149900,149500,149100,148900,143590];
-function drawChart(values=points){
-  const w=c.width,h=c.height,p=25,min=Math.min(...values)-1500,max=Math.max(...values)+1500;
-  x.clearRect(0,0,w,h);x.strokeStyle='#e6e0d2';x.lineWidth=1;
-  for(let i=0;i<5;i++){let y=p+i*(h-2*p)/4;x.beginPath();x.moveTo(p,y);x.lineTo(w-p,y);x.stroke()}
-  x.beginPath();values.forEach((v,i)=>{let px=p+i*(w-2*p)/(values.length-1),py=h-p-(v-min)/(max-min)*(h-2*p);i?x.lineTo(px,py):x.moveTo(px,py)});
-  x.strokeStyle='#c99418';x.lineWidth=3;x.stroke();
+
+function drawChart(points){
+  if(!points || points.length<2) return;
+
+  const values=points.map(p=>Number(p.value)).filter(Number.isFinite);
+  if(values.length<2) return;
+
+  const w=c.width,h=c.height,p=25;
+  const min=Math.min(...values),max=Math.max(...values);
+  const range=(max-min)||1;
+
+  x.clearRect(0,0,w,h);
+  x.strokeStyle='#e6e0d2';
+  x.lineWidth=1;
+
+  for(let i=0;i<5;i++){
+    const y=p+i*(h-2*p)/4;
+    x.beginPath();
+    x.moveTo(p,y);
+    x.lineTo(w-p,y);
+    x.stroke();
+  }
+
+  x.beginPath();
+  values.forEach((v,i)=>{
+    const px=p+i*(w-2*p)/(values.length-1);
+    const py=h-p-(v-min)/range*(h-2*p);
+    i?x.lineTo(px,py):x.moveTo(px,py);
+  });
+  x.strokeStyle='#c99418';
+  x.lineWidth=3;
+  x.stroke();
 }
-drawChart();
 
 function money(n){return '₹'+Math.round(n).toLocaleString('en-IN')}
 function setRates(r){
@@ -89,6 +131,7 @@ async function loadLiveGold(){
     const data=await response.json();
     if(!response.ok) throw new Error(data.error||'API error');
     setRates(data.rates);
+    if(data.history?.points?.length) drawChart(data.history.points);
     document.querySelectorAll('.city24').forEach(el=>el.textContent=money(Number(data.rates['24K'])*10));
     document.querySelectorAll('.city22').forEach(el=>el.textContent=money(Number(data.rates['22K'])*10));
     status.textContent='● Live';
