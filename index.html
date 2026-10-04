@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="GoldRate India — gold rates, calculator, city comparison and price trends.">
+<title>GoldRate India — Gold Rate Today</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f4ee;color:#171717;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+:root{--gold:#c99418;--gold2:#f1cc69;--dark:#151515;--muted:#777;--line:#e6e0d2;--green:#17834a}
+header{background:#111;color:#fff}.nav{max-width:1200px;margin:auto;padding:17px 24px;display:flex;justify-content:space-between;align-items:center}.logo{font-size:21px;font-weight:850}.logo b{color:var(--gold2)}.links{display:flex;gap:22px;font-size:13px;color:#bbb}.links a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:auto;padding:30px 24px 70px}.hero{display:grid;grid-template-columns:1.45fr .55fr;gap:18px}.heroMain{background:linear-gradient(135deg,#121212,#302916);color:white;border-radius:25px;padding:38px;position:relative;overflow:hidden}.heroMain:after{content:'Au';position:absolute;right:-20px;bottom:-70px;font-size:260px;font-weight:900;color:#f1cc6912}.eyebrow{color:var(--gold2);font-weight:800;font-size:12px;letter-spacing:1.5px;text-transform:uppercase}.hero h1{font-size:48px;line-height:1.02;letter-spacing:-2px;margin:12px 0}.hero p{max-width:620px;color:#c8c8c8;line-height:1.6}.controls{display:flex;gap:10px;margin-top:24px;position:relative;z-index:1}.controls select{background:#242424;color:#fff;border:1px solid #555;border-radius:10px;padding:11px 13px}
+.panel,.card{background:#fff;border:1px solid var(--line);border-radius:20px}.snapshot{padding:24px}.snapshot h3{margin:0 0 17px}.row{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:13px}.row:last-child{border:0}.ok{color:var(--green)}
+.section{margin-top:26px}.heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:13px}.heading h2{margin:0;font-size:24px;letter-spacing:-.7px}.muted{font-size:12px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{padding:21px}.tag{display:inline-block;background:#f5ecd3;color:#765609;border-radius:99px;padding:5px 8px;font-size:10px;font-weight:800}.price{font-size:31px;font-weight:900;margin:16px 0 3px}.change{font-size:12px;color:#c13f3f;font-weight:700;margin-top:12px}
+.twocol{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.chart,.calculator{padding:21px}.chart canvas{width:100%;height:260px}.calcgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}.calcgrid select,.calcgrid input{padding:11px;border:1px solid var(--line);border-radius:10px;background:#fff}.result{margin-top:13px;background:#151515;color:#fff;padding:18px;border-radius:15px}.result small{color:#aaa}.result strong{display:block;color:var(--gold2);font-size:28px;margin:5px 0}
+table{width:100%;border-collapse:collapse}.tablewrap{padding:10px 20px}.tablewrap th,.tablewrap td{text-align:left;padding:14px 8px;border-bottom:1px solid var(--line);font-size:13px}.tablewrap th{font-size:10px;color:#777;text-transform:uppercase}
+.note{margin-top:20px;background:#efe9d9;border-radius:13px;padding:14px;font-size:11px;color:#5e5435;line-height:1.5}footer{border-top:1px solid var(--line);padding:25px;color:#777;font-size:11px}.foot{max-width:1200px;margin:auto}
+@media(max-width:800px){.hero,.twocol{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.links{display:none}.hero h1{font-size:38px}.container{padding:22px 15px 50px}.heroMain{padding:28px}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div class="logo">GoldRate<b>India</b></div><div class="links"><a href="#rates">Rates</a><a href="#trend">Trend</a><a href="#calculator">Calculator</a><a href="#cities">Cities</a></div></div></header>
+
+<main class="container">
+<section class="hero">
+<div class="heroMain">
+<div class="eyebrow">India Gold Market</div>
+<h1>Gold prices, made simple.</h1>
+<p>Track gold rates by purity and city, calculate jewellery value, and follow price movements from one clean dashboard.</p>
+<div class="controls">
+<select id="city"><option>Hyderabad</option><option>Mumbai</option><option>Delhi</option><option>Pune</option><option>Bengaluru</option><option>Chennai</option><option>Kolkata</option></select>
+<select id="purityTop"><option>24K</option><option>22K</option><option>18K</option></select>
+</div>
+</div>
+<div class="panel snapshot"><h3>Market snapshot</h3><div class="row"><span>City</span><strong id="cityName">Hyderabad</strong></div><div class="row"><span>Data status</span><strong class="ok">● API-ready</strong></div><div class="row"><span>Currency</span><strong>INR (₹)</strong></div><div class="row"><span>Unit</span><strong>Per gram</strong></div><div class="row"><span>GST / making</span><strong>Excluded</strong></div></div>
+</section>
+
+<section class="section" id="rates"><div class="heading"><div><h2>Gold rate today</h2><div class="muted">Demo values — ready to be replaced by live Metals.Dev data.</div></div></div>
+<div class="cards">
+<div class="card"><span class="tag">24K · 99.9%</span><div class="price" id="r24">₹14,359</div><div class="muted">₹1,43,590 / 10g</div><div class="change">▼ 0.73% today</div></div>
+<div class="card"><span class="tag">22K · JEWELLERY</span><div class="price" id="r22">₹13,675</div><div class="muted">₹1,36,750 / 10g</div><div class="change">▼ 0.73% today</div></div>
+<div class="card"><span class="tag">18K · 75%</span><div class="price" id="r18">₹10,769</div><div class="muted">₹1,07,690 / 10g</div><div class="change">▼ 0.73% today</div></div>
+</div></section>
+
+<section class="section twocol" id="trend">
+<div class="panel chart"><div class="heading"><div><h2>30-day trend</h2><div class="muted">24K reference price · ₹/10g</div></div></div><canvas id="chart" width="720" height="270"></canvas></div>
+<div class="panel calculator" id="calculator"><h2 style="margin:0">Gold calculator</h2><div class="muted">Metal value before GST and making charges.</div><div class="calcgrid"><select id="rate"><option value="14359">24K</option><option value="13675">22K</option><option value="10769">18K</option></select><input id="grams" type="number" value="10" min="0" step=".01"></div><div class="result"><small>Estimated gold value</small><strong id="total">₹1,36,750</strong><small>Indicative only. Jewellery bills vary by seller.</small></div></div>
+</section>
+
+<section class="section" id="cities"><div class="heading"><div><h2>Popular city rates</h2><div class="muted">City pages can later be generated automatically.</div></div></div>
+<div class="panel tablewrap"><table><thead><tr><th>City</th><th>24K / 10g</th><th>22K / 10g</th><th>Change</th></tr></thead><tbody>
+<tr><td>Hyderabad</td><td>₹1,43,590</td><td>₹1,36,750</td><td class="change">▼ 0.73%</td></tr>
+<tr><td>Mumbai</td><td>₹1,43,590</td><td>₹1,36,750</td><td class="change">▼ 0.73%</td></tr>
+<tr><td>Delhi</td><td>₹1,43,590</td><td>₹1,36,750</td><td class="change">▼ 0.73%</td></tr>
+<tr><td>Pune</td><td>₹1,43,590</td><td>₹1,36,750</td><td class="change">▼ 0.73%</td></tr>
+</tbody></table></div></section>
+
+<div class="note"><b>Data note:</b> This version uses demonstration values. Before public launch, connect a licensed/authorized live data feed through a secure backend. Never put the Metals.Dev API key in this browser code.</div>
+</main>
+<footer><div class="foot">© 2026 GoldRate India · Indicative information only.</div></footer>
+
+<script>
+const points=[148790,149200,150100,149800,151300,150900,152100,151700,153000,154200,153600,152900,151800,150900,151600,150800,149900,150500,149700,150200,149800,150600,149900,150100,149600,149900,149500,149100,148900,143590];
+const c=document.getElementById('chart'),x=c.getContext('2d'),w=c.width,h=c.height,p=25,min=Math.min(...points)-1500,max=Math.max(...points)+1500;
+x.clearRect(0,0,w,h);x.strokeStyle='#e6e0d2';x.lineWidth=1;
+for(let i=0;i<5;i++){let y=p+i*(h-2*p)/4;x.beginPath();x.moveTo(p,y);x.lineTo(w-p,y);x.stroke()}
+x.beginPath();points.forEach((v,i)=>{let px=p+i*(w-2*p)/(points.length-1),py=h-p-(v-min)/(max-min)*(h-2*p);i?x.lineTo(px,py):x.moveTo(px,py)});x.strokeStyle='#c99418';x.lineWidth=3;x.stroke();
+function calc(){const g=Number(document.getElementById('grams').value)||0,r=Number(document.getElementById('rate').value);document.getElementById('total').textContent='₹'+Math.round(g*r).toLocaleString('en-IN')}
+document.getElementById('grams').addEventListener('input',calc);document.getElementById('rate').addEventListener('change',calc);
+document.getElementById('city').addEventListener('change',e=>document.getElementById('cityName').textContent=e.target.value);calc();
+</script>
+</body></html>
