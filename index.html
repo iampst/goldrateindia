@@ -80,10 +80,10 @@ summary{cursor:pointer;font-weight:700}
 
 <footer><div class="foot">© 2026 GoldRate India · Informational reference only.</div></footer>
 <script>
-const cities=['Hyderabad','Mumbai','Delhi','Pune','Bengaluru','Chennai','Kolkata'];let rates={};
+let rates={};
 const money=n=>'₹'+Math.round(n).toLocaleString('en-IN');
-function render(){const r24=+rates['24K']||0,r22=+rates['22K']||0,r18=+rates['18K']||0;document.getElementById('r24').textContent=money(r24);document.getElementById('r22').textContent=money(r22);document.getElementById('r18').textContent=money(r18);document.getElementById('t24').textContent=money(r24*10)+' / 10g';document.getElementById('t22').textContent=money(r22*10)+' / 10g';document.getElementById('t18').textContent=money(r18*10)+' / 10g';document.getElementById('rate').innerHTML=`<option value="${r24}">24K</option><option value="${r22}">22K</option><option value="${r18}">18K</option>`;document.getElementById('cityRows').innerHTML=cities.map(c=>`<tr><td>${c}</td><td>${money(r24*10)}</td><td>${money(r22*10)}</td><td>${money(r18*10)}</td></tr>`).join('');calc()}
+function render(){const r24=+rates['24K']||0,r22=+rates['22K']||0,r18=+rates['18K']||0;document.getElementById('r24').textContent=money(r24);document.getElementById('r22').textContent=money(r22);document.getElementById('r18').textContent=money(r18);document.getElementById('t24').textContent=money(r24*10)+' / 10g';document.getElementById('t22').textContent=money(r22*10)+' / 10g';document.getElementById('t18').textContent=money(r18*10)+' / 10g';document.getElementById('rate').innerHTML=`<option value="${r24}">24K</option><option value="${r22}">22K</option><option value="${r18}">18K</option>`;calc()}
 function calc(){const g=+document.getElementById('grams').value||0;const r=+document.getElementById('rate').value||0;document.getElementById('total').textContent=money(g*r)}
 async function load(){try{const res=await fetch('/api/gold',{cache:'no-store'});const data=await res.json();if(!res.ok)throw new Error(data.error||'API error');rates=data.rates;render();document.getElementById('status').textContent='Live IBJA rate';document.getElementById('updated').textContent='Updated '+data.timestamp}catch(e){document.getElementById('status').textContent='Rate temporarily unavailable';console.error(e)}}
-document.getElementById('grams').addEventListener('input',calc);document.getElementById('rate').addEventListener('change',calc);document.getElementById('city').addEventListener('change',e=>document.getElementById('cityName').textContent=e.target.value);load();
+document.getElementById('grams').addEventListener('input',calc);document.getElementById('rate').addEventListener('change',calc);load();
 </script></body></html>
