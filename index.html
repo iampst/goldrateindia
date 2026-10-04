@@ -33,10 +33,10 @@ table{width:100%;border-collapse:collapse}.tablewrap{padding:10px 20px}.tablewra
 <select id="purityTop"><option>24K</option><option>22K</option><option>18K</option></select>
 </div>
 </div>
-<div class="panel snapshot"><h3>Market snapshot</h3><div class="row"><span>City</span><strong id="cityName">Hyderabad</strong></div><div class="row"><span>Data status</span><strong class="ok" id="apiStatus">● Connecting…</strong></div><div class="row"><span>Currency</span><strong>INR (₹)</strong></div><div class="row"><span>Unit</span><strong>Per gram</strong></div><div class="row"><span>GST / making</span><strong>Excluded</strong></div></div>
+<div class="panel snapshot"><h3>Market snapshot</h3><div class="row"><span>City</span><strong id="cityName">Hyderabad</strong></div><div class="row"><span>Data status</span><strong class="ok" id="apiStatus">● Connecting…</strong></div><div class="row"><span>Currency</span><strong>INR (₹)</strong></div><div class="row"><span>Unit</span><strong>Per gram</strong></div><div class="row"><span>GST / making</span><strong>Excluded</strong></div><div class="row"><span>City premium</span><strong>Not included</strong></div></div>
 </section>
 
-<section class="section" id="rates"><div class="heading"><div><h2>Gold rate today</h2><div class="muted">Live gold data via our secure server connection.</div></div></div>
+<section class="section" id="rates"><div class="heading"><div><h2>Gold rate today</h2><div class="muted">Live IBJA reference data via our secure server connection.</div></div></div>
 <div class="cards">
 <div class="card"><span class="tag">24K · 99.9%</span><div class="price" id="r24">₹14,359</div><div class="muted">₹1,43,590 / 10g</div><div class="change">▼ 0.73% today</div></div>
 <div class="card"><span class="tag">22K · JEWELLERY</span><div class="price" id="r22">₹13,675</div><div class="muted">₹1,36,750 / 10g</div><div class="change">▼ 0.73% today</div></div>
@@ -48,15 +48,15 @@ table{width:100%;border-collapse:collapse}.tablewrap{padding:10px 20px}.tablewra
 <div class="panel calculator" id="calculator"><h2 style="margin:0">Gold calculator</h2><div class="muted">Metal value before GST and making charges.</div><div class="calcgrid"><select id="rate"><option value="14359">24K</option><option value="13675">22K</option><option value="10769">18K</option></select><input id="grams" type="number" value="10" min="0" step=".01"></div><div class="result"><small>Estimated gold value</small><strong id="total">₹1,36,750</strong><small>Indicative only. Jewellery bills vary by seller.</small></div></div>
 </section>
 
-<section class="section" id="cities"><div class="heading"><div><h2>Popular city rates</h2><div class="muted">City pages can later be generated automatically.</div></div></div>
+<section class="section" id="cities"><div class="heading"><div><h2>Popular city rates</h2><div class="muted">IBJA reference rate shown; local jeweller premiums can vary.</div></div></div>
 <div class="panel tablewrap"><table><thead><tr><th>City</th><th>24K / 10g</th><th>22K / 10g</th><th>Change</th></tr></thead><tbody>
-<tr><td>Hyderabad</td><td>₹1,43,590</td><td>₹1,36,750</td><td class="change">▼ 0.73%</td></tr>
-<tr><td>Mumbai</td><td>₹1,43,590</td><td>₹1,36,750</td><td class="change">▼ 0.73%</td></tr>
-<tr><td>Delhi</td><td>₹1,43,590</td><td>₹1,36,750</td><td class="change">▼ 0.73%</td></tr>
-<tr><td>Pune</td><td>₹1,43,590</td><td>₹1,36,750</td><td class="change">▼ 0.73%</td></tr>
+<tr><td>Hyderabad</td><td class="city24">—</td><td class="city22">—</td><td>IBJA reference</td></tr>
+<tr><td>Mumbai</td><td class="city24">—</td><td class="city22">—</td><td>IBJA reference</td></tr>
+<tr><td>Delhi</td><td class="city24">—</td><td class="city22">—</td><td>IBJA reference</td></tr>
+<tr><td>Pune</td><td class="city24">—</td><td class="city22">—</td><td>IBJA reference</td></tr>
 </tbody></table></div></section>
 
-<div class="note"><b>Data note:</b> This version uses demonstration values. Before public launch, connect a licensed/authorized live data feed through a secure backend. Never put the Metals.Dev API key in this browser code.</div>
+<div class="note"><b>Data note:</b> Live 24K reference uses Metals.Dev data for IBJA. 22K and 18K are calculated from the 24K reference by purity. GST, making charges and jeweller-specific premiums are excluded. City-level retail rates can vary by seller and are not yet included. Never put the Metals.Dev API key in this browser code.</div>
 </main>
 <footer><div class="foot">© 2026 GoldRate India · Indicative information only.</div></footer>
 
@@ -89,6 +89,8 @@ async function loadLiveGold(){
     const data=await response.json();
     if(!response.ok) throw new Error(data.error||'API error');
     setRates(data.rates);
+    document.querySelectorAll('.city24').forEach(el=>el.textContent=money(Number(data.rates['24K'])*10));
+    document.querySelectorAll('.city22').forEach(el=>el.textContent=money(Number(data.rates['22K'])*10));
     status.textContent='● Live';
     status.className='ok';
   }catch(e){
@@ -104,7 +106,9 @@ function calc(){
 }
 document.getElementById('grams').addEventListener('input',calc);
 document.getElementById('rate').addEventListener('change',calc);
-document.getElementById('city').addEventListener('change',e=>document.getElementById('cityName').textContent=e.target.value);
+document.getElementById('city').addEventListener('change',e=>{
+  document.getElementById('cityName').textContent=e.target.value;
+});
 calc();
 loadLiveGold();
 </script>
