@@ -33,10 +33,10 @@ table{width:100%;border-collapse:collapse}.tablewrap{padding:10px 20px}.tablewra
 <select id="purityTop"><option>24K</option><option>22K</option><option>18K</option></select>
 </div>
 </div>
-<div class="panel snapshot"><h3>Market snapshot</h3><div class="row"><span>City</span><strong id="cityName">Hyderabad</strong></div><div class="row"><span>Data status</span><strong class="ok">● API-ready</strong></div><div class="row"><span>Currency</span><strong>INR (₹)</strong></div><div class="row"><span>Unit</span><strong>Per gram</strong></div><div class="row"><span>GST / making</span><strong>Excluded</strong></div></div>
+<div class="panel snapshot"><h3>Market snapshot</h3><div class="row"><span>City</span><strong id="cityName">Hyderabad</strong></div><div class="row"><span>Data status</span><strong class="ok" id="apiStatus">● Connecting…</strong></div><div class="row"><span>Currency</span><strong>INR (₹)</strong></div><div class="row"><span>Unit</span><strong>Per gram</strong></div><div class="row"><span>GST / making</span><strong>Excluded</strong></div></div>
 </section>
 
-<section class="section" id="rates"><div class="heading"><div><h2>Gold rate today</h2><div class="muted">Demo values — ready to be replaced by live Metals.Dev data.</div></div></div>
+<section class="section" id="rates"><div class="heading"><div><h2>Gold rate today</h2><div class="muted">Live gold data via our secure server connection.</div></div></div>
 <div class="cards">
 <div class="card"><span class="tag">24K · 99.9%</span><div class="price" id="r24">₹14,359</div><div class="muted">₹1,43,590 / 10g</div><div class="change">▼ 0.73% today</div></div>
 <div class="card"><span class="tag">22K · JEWELLERY</span><div class="price" id="r22">₹13,675</div><div class="muted">₹1,36,750 / 10g</div><div class="change">▼ 0.73% today</div></div>
@@ -61,13 +61,51 @@ table{width:100%;border-collapse:collapse}.tablewrap{padding:10px 20px}.tablewra
 <footer><div class="foot">© 2026 GoldRate India · Indicative information only.</div></footer>
 
 <script>
+const c=document.getElementById('chart'),x=c.getContext('2d');
 const points=[148790,149200,150100,149800,151300,150900,152100,151700,153000,154200,153600,152900,151800,150900,151600,150800,149900,150500,149700,150200,149800,150600,149900,150100,149600,149900,149500,149100,148900,143590];
-const c=document.getElementById('chart'),x=c.getContext('2d'),w=c.width,h=c.height,p=25,min=Math.min(...points)-1500,max=Math.max(...points)+1500;
-x.clearRect(0,0,w,h);x.strokeStyle='#e6e0d2';x.lineWidth=1;
-for(let i=0;i<5;i++){let y=p+i*(h-2*p)/4;x.beginPath();x.moveTo(p,y);x.lineTo(w-p,y);x.stroke()}
-x.beginPath();points.forEach((v,i)=>{let px=p+i*(w-2*p)/(points.length-1),py=h-p-(v-min)/(max-min)*(h-2*p);i?x.lineTo(px,py):x.moveTo(px,py)});x.strokeStyle='#c99418';x.lineWidth=3;x.stroke();
-function calc(){const g=Number(document.getElementById('grams').value)||0,r=Number(document.getElementById('rate').value);document.getElementById('total').textContent='₹'+Math.round(g*r).toLocaleString('en-IN')}
-document.getElementById('grams').addEventListener('input',calc);document.getElementById('rate').addEventListener('change',calc);
-document.getElementById('city').addEventListener('change',e=>document.getElementById('cityName').textContent=e.target.value);calc();
+function drawChart(values=points){
+  const w=c.width,h=c.height,p=25,min=Math.min(...values)-1500,max=Math.max(...values)+1500;
+  x.clearRect(0,0,w,h);x.strokeStyle='#e6e0d2';x.lineWidth=1;
+  for(let i=0;i<5;i++){let y=p+i*(h-2*p)/4;x.beginPath();x.moveTo(p,y);x.lineTo(w-p,y);x.stroke()}
+  x.beginPath();values.forEach((v,i)=>{let px=p+i*(w-2*p)/(values.length-1),py=h-p-(v-min)/(max-min)*(h-2*p);i?x.lineTo(px,py):x.moveTo(px,py)});
+  x.strokeStyle='#c99418';x.lineWidth=3;x.stroke();
+}
+drawChart();
+
+function money(n){return '₹'+Math.round(n).toLocaleString('en-IN')}
+function setRates(r){
+  const r24=Number(r["24K"]),r22=Number(r["22K"]),r18=Number(r["18K"]);
+  document.getElementById('r24').textContent=money(r24);
+  document.getElementById('r22').textContent=money(r22);
+  document.getElementById('r18').textContent=money(r18);
+  document.getElementById('rate').innerHTML =
+    `<option value="${r24}">24K</option><option value="${r22}">22K</option><option value="${r18}">18K</option>`;
+  calc();
+}
+async function loadLiveGold(){
+  const status=document.getElementById('apiStatus');
+  try{
+    const response=await fetch('/api/gold',{cache:'no-store'});
+    const data=await response.json();
+    if(!response.ok) throw new Error(data.error||'API error');
+    setRates(data.rates);
+    status.textContent='● Live';
+    status.className='ok';
+  }catch(e){
+    status.textContent='● Demo / API unavailable';
+    status.className='';
+    console.error(e);
+  }
+}
+function calc(){
+  const g=Number(document.getElementById('grams').value)||0;
+  const r=Number(document.getElementById('rate').value)||0;
+  document.getElementById('total').textContent=money(g*r);
+}
+document.getElementById('grams').addEventListener('input',calc);
+document.getElementById('rate').addEventListener('change',calc);
+document.getElementById('city').addEventListener('change',e=>document.getElementById('cityName').textContent=e.target.value);
+calc();
+loadLiveGold();
 </script>
 </body></html>
